@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: electricalc-react-deploy
+  labels:
+    name: electricalc-react-deploy
+    app: electriCalc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: electricalc-react-pod
+      app: electriCalc
+  template:
+    metadata:
+      name: electricalc-pod
+      labels:
+        name: electricalc-react-pod
+        app: electriCalc    
+    spec:
+      containers:
+      - name:  node-container
+        image: kobzpik/electricalc-react:latest
+        ports:
+        - containerPort: 3000
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: electricalc-service
+  labels:
+    name: electricalc-service
+    app: electriCalc
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30005
+  selector:
+    name: electricalc-react-pod
+    app: electriCalc  
+
+
+
